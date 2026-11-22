@@ -1240,7 +1240,7 @@ public class DataHelper {
     public void deleteDatabase() {
         // EDA52 / Breedbase build: clear all Time of Year / Event configs when DB is deleted.
         try {
-            TimeOfYearEventConfigStore.clearAll(context);
+            TimeOfYearEventConfigStore.INSTANCE.clearAll(context);
         } catch (Exception e) {
             Log.e(TAG, "Failed to clear TOY configs", e);
         }
