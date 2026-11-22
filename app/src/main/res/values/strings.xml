@@ -2135,4 +2135,9 @@
     <string name="toy_sync_aborted_title">Sincronización abortada</string>
     <string name="toy_sync_no_compounds">No se encontraron traits compuestos en el índice. Por favor importe una lista de traits compuestos desde Breedbase primero.</string>
 
+    <string name="act_brapi_list_picker_empty">No lists were returned. Private lists need to be shared (public) in Breedbase.</string>
+    <string name="act_brapi_list_picker_error">Could not load lists: %1$s</string>
+    <string name="brapi_compound_index_empty">No compound traits were found in the index. Please import the list of compound traits first.</string>
+    <string name="brapi_compound_missing">These base traits have no matching compound trait in Breedbase:\n%1$s\n\nCreate the missing compound traits in Breedbase and import them through a list, or uncheck them in the Time of Year / Event dialog. Nothing was uploaded.</string>
+    <string name="brapi_compound_ambiguous">More than one compound trait matches:\n%1$s\n\nNothing was uploaded.</string>
 </resources>

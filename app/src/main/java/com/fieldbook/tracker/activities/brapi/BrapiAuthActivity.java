@@ -169,6 +169,40 @@ public class BrapiAuthActivity extends ThemedActivity {
         }
     }
 
+    /**
+     * EDA52 / Breedbase build: some Breedbase servers publish their own internal address
+     * (e.g. http://172.16.17.77:8080) in the OpenID discovery document, which the phone cannot
+     * reach. When an endpoint points to a private-network address that differs from the address
+     * the discovery document was downloaded from, send it to the address the user configured.
+     */
+    private static AuthorizationServiceConfiguration fixInternalEndpoints(AuthorizationServiceConfiguration config, String oidcUrl) {
+        try {
+            if (config == null || oidcUrl == null || oidcUrl.isEmpty()) return config;
+            Uri origin = Uri.parse(oidcUrl);
+            Uri auth = rewriteInternalEndpoint(config.authorizationEndpoint, origin);
+            Uri token = rewriteInternalEndpoint(config.tokenEndpoint, origin);
+            if (auth.equals(config.authorizationEndpoint) && token.equals(config.tokenEndpoint)) return config;
+            Log.w("BrapiAuth", "Rewrote OIDC endpoints to " + origin.getAuthority());
+            return new AuthorizationServiceConfiguration(auth, token);
+        } catch (Exception e) {
+            return config;
+        }
+    }
+
+    private static Uri rewriteInternalEndpoint(Uri endpoint, Uri origin) {
+        if (endpoint == null || origin == null || origin.getAuthority() == null) return endpoint;
+        String host = endpoint.getHost();
+        if (host == null || endpoint.getAuthority() == null) return endpoint;
+        if (endpoint.getAuthority().equalsIgnoreCase(origin.getAuthority())) return endpoint;
+        boolean privateIp = host.startsWith("10.") || host.startsWith("192.168.")
+                || host.matches("172\\.(1[6-9]|2[0-9]|3[0-1])\\..*");
+        if (!privateIp) return endpoint;
+        return endpoint.buildUpon()
+                .scheme(origin.getScheme())
+                .encodedAuthority(origin.getEncodedAuthority())
+                .build();
+    }
+
     public void authorizeBrAPI(SharedPreferences sharedPreferences, Context context) {
         // Compared against a stable identifier, never the picker's label: the label is translated,
         // so an account configured in one language stopped matching after a language change.
@@ -199,7 +233,7 @@ public class BrapiAuthActivity extends ThemedActivity {
 
                 try {
 
-                    requestAuthorization(authorizationServiceConfiguration, finalClientId, responseType, redirectURI, finalScope, context);
+                    requestAuthorization(fixInternalEndpoints(authorizationServiceConfiguration, launchOidcUrl), finalClientId, responseType, redirectURI, finalScope, context);
 
                 } catch (IllegalArgumentException e) {
 

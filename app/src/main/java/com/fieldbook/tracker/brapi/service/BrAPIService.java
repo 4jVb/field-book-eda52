@@ -60,10 +60,13 @@ public interface BrAPIService {
     static Boolean checkMatchBrapiUrl(Context context, String dataSource) {
 
         try {
+            // Must use the same value that getHostUrl() stores as the data source (host[:port]),
+            // otherwise a server on a non-default port never matches its own fields.
+            String hostURL = getHostUrl(context);
+            if (hostURL == null || dataSource == null) return false;
             URL externalUrl = new URL(getBrapiUrl(context));
-            String hostURL = externalUrl.getHost();
 
-            return (hostURL.equals(dataSource));
+            return hostURL.equals(dataSource) || externalUrl.getHost().equals(dataSource);
         } catch (MalformedURLException e) {
             Log.e("error-cmbu", e.toString());
             return false;

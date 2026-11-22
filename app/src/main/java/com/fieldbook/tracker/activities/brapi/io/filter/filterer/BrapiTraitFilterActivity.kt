@@ -372,6 +372,8 @@ class BrapiTraitFilterActivity(
                     }
                     return@launch
                 }
+                // the list calls need the OAuth token, same as every other BrAPI call
+                service.authorizeClient()
                 val itemIds = service.listService.getListItems(listDbId)
                 if (itemIds.isEmpty()) {
                     withContext(Dispatchers.Main) {
@@ -381,7 +383,7 @@ class BrapiTraitFilterActivity(
                     }
                     return@launch
                 }
-                val variables = service.listService.getVariablesByIds(itemIds)
+                val (variables, notFound) = service.listService.resolveVariables(itemIds)
                 // EDA52: index compound traits (names with "|") for later sync lookup
                 CompoundTraitIndexer.indexVariables(variables)
                 if (variables.isEmpty()) {
@@ -397,12 +399,14 @@ class BrapiTraitFilterActivity(
                     val trait = variable.toTraitObject(this@BrapiTraitFilterActivity)
                     variable.observationVariableDbId?.let { id -> traitObjects[id] = trait }
                 }
-                traitRepo.saveTraitsFromHashmap(traitObjects, ArrayList(itemIds))
+                // saveTraitsFromHashmap only inserts traits whose DbId is in the second argument
+                traitRepo.saveTraitsFromHashmap(traitObjects, ArrayList(traitObjects.keys))
                 prefs.edit { remove(FILTER_NAME) }
                 withContext(Dispatchers.Main) {
                     pb?.visibility = View.GONE
+                    val extra = if (notFound.isNotEmpty()) " (${notFound.size} no encontrados)" else ""
                     Toast.makeText(this@BrapiTraitFilterActivity,
-                        "Imported ${variables.size} traits from \"$listName\"",
+                        "Importados ${traitObjects.size} traits de \"$listName\"$extra",
                         Toast.LENGTH_LONG).show()
                     setResult(RESULT_OK)
                     finish()

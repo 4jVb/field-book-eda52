@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -61,6 +62,7 @@ class BrapiListPickerActivity : ThemedActivity(), CoroutineScope by MainScope() 
     private var currentPage = 0
     private val pageSize = 100
     private var currentTypeFilter: String? = "traits"
+    private val rawLists = mutableListOf<BrAPIListSummary>()
 
     private val brapiService by lazy {
         (BrAPIServiceFactory.getBrAPIService(this) as? BrAPIServiceV2).also { service ->
@@ -125,6 +127,7 @@ class BrapiListPickerActivity : ThemedActivity(), CoroutineScope by MainScope() 
 
     private fun restartFetch() {
         allLists.clear()
+        rawLists.clear()
         adapter.submitList(emptyList())
         currentPage = 0
         currentSelection = null
@@ -137,28 +140,49 @@ class BrapiListPickerActivity : ThemedActivity(), CoroutineScope by MainScope() 
         loadMoreBtn.visibility = View.GONE
         launch(Dispatchers.IO) {
             try {
+                // the list calls need the OAuth token, same as every other BrAPI call
+                brapiService?.authorizeClient()
                 val pageResult = brapiService?.listService?.getLists(
-                    listType = currentTypeFilter, page = currentPage, pageSize = pageSize
+                    page = currentPage, pageSize = pageSize
                 ) ?: emptyList()
                 withContext(Dispatchers.Main) {
-                    allLists.addAll(pageResult)
+                    rawLists.addAll(pageResult)
                     applyFilter()
-                    if (pageResult.size >= pageSize) loadMoreBtn.visibility = View.VISIBLE
-                    else loadMoreBtn.visibility = View.GONE
+                    loadMoreBtn.visibility =
+                        if (pageResult.size >= pageSize) View.VISIBLE else View.GONE
                     progressBar.visibility = View.GONE
+                    if (rawLists.isEmpty()) {
+                        Toast.makeText(this@BrapiListPickerActivity,
+                            R.string.act_brapi_list_picker_empty, Toast.LENGTH_LONG).show()
+                    }
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to fetch lists page $currentPage", e)
                 withContext(Dispatchers.Main) {
                     progressBar.visibility = View.GONE
                     loadMoreBtn.visibility = View.GONE
+                    Toast.makeText(this@BrapiListPickerActivity,
+                        getString(R.string.act_brapi_list_picker_error, e.message ?: e.javaClass.simpleName),
+                        Toast.LENGTH_LONG).show()
                 }
             }
         }
     }
 
+    /** Lenient on-device type filter: lists whose type is unknown to the client are never hidden. */
+    private fun matchesType(list: BrAPIListSummary): Boolean {
+        val filter = currentTypeFilter ?: return true
+        val type = list.listType?.toString()?.lowercase() ?: return true
+        return when (filter) {
+            "traits" -> type.contains("trait") || type.contains("variable")
+            else -> type.contains(filter)
+        }
+    }
+
     private fun applyFilter() {
         val query = searchEt.text?.toString()?.trim().orEmpty()
+        allLists.clear()
+        allLists.addAll(rawLists.filter { matchesType(it) })
         val filtered = if (query.isEmpty()) allLists.toList()
         else allLists.filter {
             it.listName?.contains(query, ignoreCase = true) == true ||

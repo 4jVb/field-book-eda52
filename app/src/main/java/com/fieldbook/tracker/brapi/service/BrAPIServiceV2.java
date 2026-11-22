@@ -155,6 +155,19 @@ public class BrAPIServiceV2 extends AbstractBrAPIService implements BrAPIService
     // EDA52 / Breedbase build: Lists service for trait import by Breedbase list.
     public final ListService listService;
 
+    // EDA52 / Breedbase build: base variable DbId -> {compound DbId, compound name}. Set by the
+    // sync before an upload so observations of base traits are sent as their compound variable.
+    private Map<String, String[]> variableOverrides = new HashMap<>();
+
+    public void setVariableOverrides(Map<String, String[]> overrides) {
+        this.variableOverrides = overrides != null ? overrides : new HashMap<>();
+    }
+
+    private String effectiveVariableDbId(Observation observation) {
+        String[] ov = variableOverrides.get(observation.getVariableDbId());
+        return ov != null ? ov[0] : observation.getVariableDbId();
+    }
+
     private final SharedPreferences preferences;
     private final BrapiAccountHelper accountHelper;
 
@@ -1251,8 +1264,9 @@ public class BrAPIServiceV2 extends AbstractBrAPIService implements BrAPIService
 
         ArrayList<String> validObservationVariableDbIds = new ArrayList<>();
         for (Observation observation : observations) {
-            if (observation.getVariableDbId() != null && !observation.getVariableDbId().isEmpty()) {
-                validObservationVariableDbIds.add(observation.getVariableDbId());
+            String effectiveId = effectiveVariableDbId(observation);
+            if (effectiveId != null && !effectiveId.isEmpty()) {
+                validObservationVariableDbIds.add(effectiveId);
             }
         }
 
@@ -1311,8 +1325,9 @@ public class BrAPIServiceV2 extends AbstractBrAPIService implements BrAPIService
 
             ArrayList<String> validObservationVariableDbIds = new ArrayList<>();
             for (Observation observation : observations) {
-                if (observation.getVariableDbId() != null && !observation.getVariableDbId().isEmpty()) {
-                    validObservationVariableDbIds.add(observation.getVariableDbId());
+                String effectiveId = effectiveVariableDbId(observation);
+                if (effectiveId != null && !effectiveId.isEmpty()) {
+                    validObservationVariableDbIds.add(effectiveId);
                 }
             }
 
@@ -1368,8 +1383,9 @@ public class BrAPIServiceV2 extends AbstractBrAPIService implements BrAPIService
         newObservation.setObservationTimeStamp(TimeAdapter.convertFrom(observation.getTimestamp()));
         newObservation.setObservationUnitDbId(observation.getUnitDbId());
         newObservation.setStudyDbId(observation.getStudyId());
-        newObservation.setObservationVariableDbId(observation.getVariableDbId());
-        newObservation.setObservationVariableName(observation.getVariableName());
+        String[] compound = variableOverrides.get(observation.getVariableDbId());
+        newObservation.setObservationVariableDbId(compound != null ? compound[0] : observation.getVariableDbId());
+        newObservation.setObservationVariableName(compound != null ? compound[1] : observation.getVariableName());
         newObservation.setValue(observation.getValue());
 
         BrAPIExternalReference reference = new BrAPIExternalReference();

@@ -21,6 +21,9 @@ import com.fieldbook.tracker.traits.CategoricalTraitLayout
 import com.fieldbook.tracker.traits.formats.Formats
 import com.fieldbook.tracker.traits.formats.coders.DateJsonCoder
 import com.fieldbook.tracker.utilities.CategoryJsonUtil
+import com.fieldbook.tracker.utilities.CompoundUploadPlanner
+import com.fieldbook.tracker.utilities.TimeOfYearEventHelper
+import com.fieldbook.tracker.brapi.service.BrAPIServiceV2
 import com.fieldbook.tracker.utilities.DateJsonUtil
 import com.fieldbook.tracker.utilities.JsonUtil
 import com.fieldbook.tracker.utilities.export.ValueProcessorFormatAdapter
@@ -269,6 +272,34 @@ class BrapiSyncViewModel @Inject constructor(
                 )
             }
             return
+        }
+
+        // EDA52 / Breedbase build: when a Time of Year / Event config is active, observations of
+        // the selected base traits are uploaded as their compound variable. Strict rule: if any
+        // selected trait has no (or more than one) compound variable, abort before sending anything.
+        val v2Service = brAPIService as? BrAPIServiceV2
+        try {
+            val localStudyId = study.studyId
+            val allTraits = dataHelper.getAllTraitObjects()
+            val toyConfig = TimeOfYearEventHelper.getActiveConfig(context, localStudyId, allTraits)
+            if (CompoundUploadPlanner.isActive(toyConfig)) {
+                val plan = CompoundUploadPlanner.build(allTraits, toyConfig!!)
+                if (!plan.ok) {
+                    v2Service?.setVariableOverrides(emptyMap())
+                    _uiState.update {
+                        it.copy(isUploadFinished = false, uploadError = plan.errorMessage(context))
+                    }
+                    return
+                }
+                v2Service?.setVariableOverrides(
+                    plan.overrides.mapValues { arrayOf(it.value.dbId, it.value.name) }
+                )
+            } else {
+                v2Service?.setVariableOverrides(emptyMap())
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Could not evaluate the compound trait configuration", e)
+            v2Service?.setVariableOverrides(emptyMap())
         }
 
         activeJob = viewModelScope.launch(Dispatchers.IO) {

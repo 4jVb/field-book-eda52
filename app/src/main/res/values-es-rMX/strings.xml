@@ -1845,4 +1845,9 @@
     <string name="toy_error_missing_compound_traits">Los siguientes traits base no tienen trait compuesto correspondiente en Breedbase. Cree los traits compuestos faltantes e impórtelos vía Lista, o desmárquelos en el diálogo de configuración: %1$s</string>
     <string name="toy_sync_aborted_title">Sincronización abortada</string>
     <string name="toy_sync_no_compounds">No se encontraron traits compuestos en el índice. Por favor importe una lista de traits compuestos desde Breedbase primero.</string>
+    <string name="act_brapi_list_picker_empty">El servidor no devolvió listas. Si la lista es privada, compártela (pública) en Breedbase.</string>
+    <string name="act_brapi_list_picker_error">No se pudieron cargar las listas: %1$s</string>
+    <string name="brapi_compound_index_empty">No se encontraron traits compuestos en el índice, por favor importe la lista de compuestos primero.</string>
+    <string name="brapi_compound_missing">Los siguientes traits base no tienen trait compuesto correspondiente en Breedbase:\n%1$s\n\nCree los traits compuestos faltantes en Breedbase e impórtelos vía Lista, o desmárquelos en el diálogo de Tiempo del año/Evento. No se subió nada.</string>
+    <string name="brapi_compound_ambiguous">Hay más de un trait compuesto que coincide:\n%1$s\n\nNo se subió nada.</string>
 </resources>

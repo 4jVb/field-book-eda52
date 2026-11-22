@@ -88,6 +88,17 @@ object CompoundTraitDao {
     } ?: emptyList()
 
     /**
+     * Returns every row of the index (it is small: only compound variables imported from lists).
+     */
+    fun findAll(): List<CompoundTraitModel> = withDatabase { db ->
+        val cursor = db.rawQuery(
+            "SELECT id, base_trait_name, toy_type, toy_value, event_type, event_value, " +
+                "observation_variable_db_id, observation_variable_name, study_id FROM $TABLE", null
+        )
+        cursor?.toTable()?.map { CompoundTraitModel.fromRow(it) } ?: emptyList()
+    } ?: emptyList()
+
+    /**
      * Deletes all entries (used when the DB is reset or when re-importing lists).
      */
     fun deleteAll(): Int = withDatabase { db ->
