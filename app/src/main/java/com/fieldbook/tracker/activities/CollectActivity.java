@@ -1372,7 +1372,7 @@ public class CollectActivity extends ThemedActivity
             int studyId = preferences.getInt(GeneralKeys.SELECTED_FIELD_ID, -1);
             if (studyId != -1) {
                 java.util.List<com.fieldbook.tracker.objects.TraitObject> traits = database.getAllTraitObjects();
-                TimeOfYearEventHelper.showDialogIfNeeded(this, studyId, traits);
+                TimeOfYearEventHelper.INSTANCE.showDialogIfNeeded(this, studyId, traits);
             }
         } catch (Exception e) {
             Log.e(TAG, "Failed to show TOY dialog", e);
