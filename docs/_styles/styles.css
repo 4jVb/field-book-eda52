@@ -1,0 +1,19 @@
+.screenshot {
+    display: block;
+    margin: auto;
+  }
+.screenshot-caption {
+    text-align: center;
+}
+.icon {
+  vertical-align: middle;
+  width: 20px;
+}
+.icon-title {
+  vertical-align: middle;
+  width: 40px;
+}
+.sidebar-group-label[disabled] {
+  opacity: 1;
+  cursor: pointer;
+}

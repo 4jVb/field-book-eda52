@@ -1,0 +1,222 @@
+name: do-github-release
+
+# This workflow automates the app release process and supports multiple triggers:
+# - Manual dispatch: Releases unconditionally with a specified version bump.
+# - Weekly schedule: Runs every Monday at 3:00 PM EST and performs a patch release if the app directory has changed since the last release.
+
+# Key steps:
+# - Optionally checks for changes in `/app` and determines the release type (major, minor, or patch).
+# - Extracts unreleased notes from `CHANGELOG.md`, updates it, and syncs `changelog.xml`.
+# - Bumps the app version, builds, and signs the APK.
+# - Commits changes and creates a GitHub release with the APK and changelog details.
+
+on:
+  schedule:
+    # Run every Monday at 3:00 PM EST
+    - cron: "0 20 * * 1"
+  workflow_dispatch:
+    inputs:
+      bump_type:
+        description: "Specify the type of version bump (major, minor, patch)"
+        required: false
+        default: "patch"
+  repository_dispatch:
+    types: [trigger-release]
+
+jobs:
+  check-changes:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      release_required: ${{ steps.release-check.outputs.release_required }}
+      bump_type: ${{ steps.release-check.outputs.bump_type }}
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Determine Release Type and Necessity
+        id: release-check
+        run: |
+          if [ "${{ github.event_name }}" == "schedule" ]; then
+            LAST_RELEASE_TAG=$(git describe --tags $(git rev-list --tags --max-count=1))
+            echo "LAST_RELEASE_TAG: $LAST_RELEASE_TAG"
+
+            LAST_RELEASE_COMMIT=$(git rev-list -n 1 $LAST_RELEASE_TAG)
+            echo "LAST_RELEASE_COMMIT: $LAST_RELEASE_COMMIT"
+
+            changed_files=$(git diff-tree --no-commit-id --name-only $LAST_RELEASE_COMMIT HEAD | grep '^app' || echo "none")
+            echo "Changed files: $changed_files"
+
+            if [ "$changed_files" != "none" ]; then
+              echo "App directory has changed since the last release, proceeding with new release"
+              echo "release_required=true" >> $GITHUB_OUTPUT
+              echo "bump_type=patch" >> $GITHUB_OUTPUT
+            else
+              echo "No app directory changes since the last release. Skipping release."
+              echo "release_required=false" >> $GITHUB_OUTPUT
+            fi
+          elif [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "release_required=true" >> $GITHUB_OUTPUT
+            echo "bump_type=${{ github.event.inputs.bump_type }}" >> $GITHUB_OUTPUT
+          elif [ "${{ github.event_name }}" == "repository_dispatch" ]; then
+            echo "release_required=true" >> $GITHUB_OUTPUT
+            echo "bump_type=${{ github.event.client_payload.bump_type }}" >> $GITHUB_OUTPUT
+          else
+            echo "Unknown trigger source."
+            exit 1
+          fi
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    needs: check-changes
+    if: needs.check-changes.outputs.release_required == 'true'
+    steps:
+
+      - name: Checkout Repo
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Bump Version in version.properties
+        id: bump-version
+        run: |
+          bump_type="${{ needs.check-changes.outputs.bump_type }}"
+          echo "Bumping version with BUMP_TYPE: $bump_type"
+
+          source version.properties
+
+          if [ "$bump_type" == "major" ]; then
+              majorVersion=$((majorVersion + 1))
+              minorVersion=0
+              patchVersion=0
+          elif [ "$bump_type" == "minor" ]; then
+              minorVersion=$((minorVersion + 1))
+              patchVersion=0
+          else
+              patchVersion=$((patchVersion + 1))
+          fi
+
+          echo "majorVersion=$majorVersion" > version.properties
+          echo "minorVersion=$minorVersion" >> version.properties
+          echo "patchVersion=$patchVersion" >> version.properties
+
+          VERSION=$majorVersion.$minorVersion.$patchVersion
+          VERSION_CODE=$((majorVersion * 10000 + minorVersion * 100 + patchVersion))
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "VERSION_CODE=$VERSION_CODE" >> $GITHUB_ENV
+
+      - name: Process CHANGELOG.md and update changelog.xml
+        id: process-changelog
+        run: |
+          python3 .github/workflows/scripts/github-release.py "${{ github.repository }}" "CHANGELOG.md" "app/src/main/res/raw/changelog.xml"
+
+      - name: Set Up Build Environment
+        uses: actions/setup-java@v6
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v4
+
+      - name: Install Build Tools 29.0.3
+        run: sdkmanager "build-tools;29.0.3"
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Get local.properties from secrets
+        env:
+          LOCAL_PROPERTIES: ${{ secrets.LOCAL_PROPERTIES }}
+        run: printenv LOCAL_PROPERTIES > $GITHUB_WORKSPACE/local.properties
+
+      - name: Build APK
+        run: ./gradlew app:assembleRelease
+
+      - name: Sign APK
+        env:
+          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+          ALIAS: ${{ secrets.ALIAS }}
+          KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          BUILD_TOOLS="$ANDROID_HOME/build-tools/29.0.3"
+          DIR=app/build/outputs/apk/release
+          KEYSTORE="$RUNNER_TEMP/signing.jks"
+          trap 'rm -f "$KEYSTORE"' EXIT
+
+          echo "$SIGNING_KEY" | base64 -d > "$KEYSTORE"
+
+          "$BUILD_TOOLS/zipalign" -f -p 4 "$DIR/app-release-unsigned.apk" "$DIR/app-release-aligned.apk"
+
+          "$BUILD_TOOLS/apksigner" sign \
+            --ks "$KEYSTORE" \
+            --ks-key-alias "$ALIAS" \
+            --ks-pass env:KEY_STORE_PASSWORD \
+            --key-pass env:KEY_PASSWORD \
+            --out "$DIR/app-release-unsigned-signed.apk" \
+            "$DIR/app-release-aligned.apk"
+
+          "$BUILD_TOOLS/apksigner" verify "$DIR/app-release-unsigned-signed.apk"
+
+      - name: Upload Built APK
+        uses: actions/upload-artifact@v7
+        with:
+          name: Signed APK
+          path: app/build/outputs/apk/release/app-release-unsigned-signed.apk
+
+      # credentials are only configured for the push so the build can't read the PAT
+      - name: Configure Push Credentials
+        env:
+          ACTIONS_PAT: ${{ secrets.ACTIONS_PAT }}
+        run: |
+          AUTH=$(printf 'x-access-token:%s' "$ACTIONS_PAT" | base64 -w0)
+          echo "::add-mask::$AUTH"
+          git config --local http.https://github.com/.extraheader "AUTHORIZATION: basic $AUTH"
+
+      - name: Commit Version and Changelog Changes
+        if: ${{ success() }}
+        uses: EndBug/add-and-commit@v11
+        with:
+          add: "version.properties CHANGELOG.md app/src/main/res/raw/changelog.xml"
+          message: "Bump ${{ needs.check-changes.outputs.bump_type }} and update changelog for v${{ env.VERSION }}"
+
+      - name: Remove Push Credentials
+        if: ${{ always() }}
+        run: git config --local --unset-all http.https://github.com/.extraheader || true
+
+      - name: Make GitHub Release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          release_name: "v${{ env.VERSION }}"
+          tag: "${{ env.VERSION }}"
+          file: app/build/outputs/apk/release/app-release-unsigned-signed.apk
+          asset_name: "Field-Book-v${{ env.VERSION }}.apk"
+          body: ${{ steps.process-changelog.outputs.changelog_additions }}
+      
+      - name: Check date for Google Play upload
+        id: date_check
+        run: |
+          CURRENT_DATE=$(date +%m%d)
+          echo "CURRENT_DATE: $CURRENT_DATE"
+          if [ "$CURRENT_DATE" -ge 0415 ] && [ "$CURRENT_DATE" -le 0915 ]; then
+            echo "UPLOAD_TO_PLAY_STORE=false" >> $GITHUB_ENV
+          else
+            echo "UPLOAD_TO_PLAY_STORE=true" >> $GITHUB_ENV
+          fi
+    
+      - name: Release APK to Play Store
+        if: env.UPLOAD_TO_PLAY_STORE == 'true'
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+          packageName: com.fieldbook.tracker
+          releaseFiles: app/build/outputs/apk/release/app-release-unsigned-signed.apk
+          tracks: alpha

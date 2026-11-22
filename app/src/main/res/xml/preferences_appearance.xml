@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        android:key="category_appearance_system"
+        android:title="@string/preferences_appearance_application_title"
+        app:iconSpaceReserved="false">
+
+        <Preference
+            android:icon="@drawable/ic_pref_appearance_theme"
+            android:key="APPLICATION_THEME"
+            android:summary="@string/preferences_appearance_theme_summary"
+            android:title="@string/preferences_appearance_theme_title"
+            app:fragment="com.fieldbook.tracker.preferences.ThemePreferencesFragment" />
+
+        <Preference
+            android:icon="@drawable/ic_nav_drawer_translate"
+            android:key="language"
+            android:summary="@string/preferences_appearance_language_description"
+            android:title="@string/preferences_appearance_language"
+            app:fragment="com.fieldbook.tracker.preferences.LanguagePreferenceFragment"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="category_appearance_collect"
+        android:title="@string/preferences_appearance_collect_screen_title"
+        app:allowDividerAbove="true"
+        app:iconSpaceReserved="false">
+
+        <MultiSelectListPreference
+            android:defaultValue="@array/pref_toolbar_customize_default"
+            android:dialogTitle="@string/preferences_appearance_toolbar_customize"
+            android:entries="@array/pref_toolbar_customize_title"
+            android:entryValues="@array/pref_toolbar_customize_values"
+            android:icon="@drawable/ic_pref_appearance_toolbar"
+            android:key="TOOLBAR_CUSTOMIZE"
+            android:summary="@string/preferences_appearance_toolbar_customize_description"
+            android:title="@string/preferences_appearance_toolbar_customize" />
+
+        <com.h6ah4i.android.preference.NumberPickerPreferenceCompat
+            android:icon="@drawable/ic_adv_infobar_count"
+            android:key="INFOBAR_NUMBER"
+            android:summary="@string/preferences_appearance_infobar_number_description"
+            android:title="@string/preferences_appearance_infobar_number"
+            android:defaultValue="3"
+            app:nppc_maxValue="20"
+            app:nppc_minValue="1" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_hide_infobar_prefix"
+            android:key="HIDE_INFOBAR_PREFIX"
+            android:summary="@string/preferences_appearance_infobar_hide_prefix_description"
+            android:title="@string/preferences_appearance_infobar_hide_prefix" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_hide_entry_arrows"
+            android:key="HIDE_ENTRY_NAVIGATION"
+            android:summary="@string/preferences_appearance_hide_entry_navigation_description"
+            android:title="@string/preferences_appearance_hide_entry_navigation" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:icon="@drawable/ic_range_progress"
+            android:key="RANGE_PROGRESS_BAR"
+            android:summary="@string/preferences_appearance_range_progress_bar_description"
+            android:title="@string/preferences_appearance_range_progress_bar" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:icon="@drawable/ic_traits_progress"
+            android:key="TRAITS_PROGRESS_BAR"
+            android:summary="@string/preferences_appearance_traits_progress_bar_description"
+            android:title="@string/preferences_appearance_traits_progress_bar" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_pref_timestamp"
+            android:key="SHOW_OBSERVATION_TIMESTAMP"
+            android:summary="@string/preferences_appearance_observation_timestamp_description"
+            android:title="@string/preferences_appearance_observation_timestamp" />
+
+    </PreferenceCategory>
+</PreferenceScreen>

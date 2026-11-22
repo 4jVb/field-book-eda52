@@ -1,0 +1,75 @@
+name: process-pr-merge
+
+# This workflow processes commits pushed to the main branch to:
+# 1. Determine if the commit is associated with a PR, and if not exit gracefully.
+# 2. Extract relevant details (change type, release note) from the PR body
+#    and use them to update the changelog if applicable (change type is not "OTHER").
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  GH_TOKEN: ${{ secrets.ACTIONS_PAT }}
+
+jobs:
+  determine-pr:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      pr_number: ${{ steps.check-pr.outputs.pr_number }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Check if this is a PR commit
+        id: check-pr
+        run: |
+          commit_sha=$(git log -1 --format="%H")
+          echo "Commit SHA: $commit_sha"
+
+          pr_number=$(gh api -X GET "repos/${{ github.repository }}/commits/$commit_sha/pulls" --jq '.[0].number')
+
+          if [ -z "$pr_number" ]; then
+            echo "No PR associated with commit $commit_sha."
+            echo "pr_number=" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          echo "PR Number: $pr_number"
+          echo "pr_number=${pr_number}" >> $GITHUB_OUTPUT
+
+  update-changelog:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    needs: determine-pr
+    if: needs.determine-pr.outputs.pr_number != ''
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          token: ${{ secrets.ACTIONS_PAT }}
+          fetch-depth: 0
+
+      - name: Process PR and update changelog
+        id: process-pr
+        run: |
+          python3 .github/workflows/scripts/process-pr-merge.py "${{ github.repository }}" "${{ needs.determine-pr.outputs.pr_number }}"
+
+      # steps below this should use the output from previous step if needed
+      - name: Commit and push changelog update
+        if: steps.process-pr.outputs.success == 'true'
+        uses: EndBug/add-and-commit@v11
+        with:
+          add: 'CHANGELOG.md'
+          message: "Update CHANGELOG.md with release note from PR #${{ needs.determine-pr.outputs.pr_number }}"
+          author_email: git-action-bot@example.com
+          author_name: Git Action Bot
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          push: true

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:backgroundTint="@color/WHITE">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/act_brapi_list_picker_tb"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/act_brapi_list_picker_search_til"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:hint="@string/act_brapi_list_picker_search_hint"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/act_brapi_list_picker_tb">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/act_brapi_list_picker_search_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:imeOptions="actionSearch" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/act_brapi_list_picker_filter_label_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/act_brapi_list_picker_list_type_label"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/act_brapi_list_picker_search_til" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/act_brapi_list_picker_type_cg"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        app:singleSelection="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/act_brapi_list_picker_filter_label_tv">
+        <com.google.android.material.chip.Chip
+            android:id="@+id/act_brapi_list_picker_chip_traits"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/act_brapi_list_picker_type_traits" />
+        <com.google.android.material.chip.Chip
+            android:id="@+id/act_brapi_list_picker_chip_germplasm"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/act_brapi_list_picker_type_germplasm" />
+        <com.google.android.material.chip.Chip
+            android:id="@+id/act_brapi_list_picker_chip_all"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/act_brapi_list_picker_type_all" />
+    </com.google.android.material.chip.ChipGroup>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/act_brapi_list_picker_rv"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/act_brapi_list_picker_load_more_btn"
+        app:layout_constraintTop_toBottomOf="@id/act_brapi_list_picker_type_cg"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="vertical"
+        tools:listitem="@layout/list_item_study" />
+
+    <ProgressBar
+        android:id="@+id/act_brapi_list_picker_pb"
+        android:visibility="gone"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:indeterminate="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/act_brapi_list_picker_rv"
+        app:layout_constraintBottom_toBottomOf="@id/act_brapi_list_picker_rv" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/act_brapi_list_picker_load_more_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:minHeight="?attr/actionBarSize"
+        android:text="@string/act_brapi_list_picker_load_more"
+        android:visibility="gone"
+        android:background="@drawable/cell"
+        android:backgroundTint="?attr/fb_color_primary"
+        android:textColor="?attr/fb_color_text_high_contrast_inverted"
+        app:layout_constraintBottom_toTopOf="@id/act_brapi_list_picker_import_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/act_brapi_list_picker_import_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:minHeight="?attr/actionBarSize"
+        android:text="@string/act_brapi_list_picker_import_selected"
+        android:enabled="false"
+        android:background="@drawable/cell"
+        android:backgroundTint="?attr/fb_color_primary"
+        android:textColor="?attr/fb_color_text_high_contrast_inverted"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

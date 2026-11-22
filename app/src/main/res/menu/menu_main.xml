@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Warning / error below for showAsAction should be ignored until Toolbar is replaced with AppCompatToolbar-->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="AppCompatResource">
+    <item
+        android:id="@+id/help"
+        android:icon="@drawable/ic_tb_help"
+        android:showAsAction="always"
+        android:title="@string/tutorial_dialog_title" />
+    <item
+        android:id="@+id/nextEmptyPlot"
+        android:icon="@drawable/ic_tb_forward"
+        android:showAsAction="always"
+        android:title="@string/main_toolbar_next_entry_no_data" />
+    <item
+        android:id="@+id/jumpToPlot"
+        android:icon="@drawable/ic_tb_barcode_scan"
+        android:showAsAction="always"
+        android:title="@string/main_toolbar_moveto" />
+    <item
+        android:id="@+id/datagrid"
+        android:icon="@drawable/ic_tb_datagrid"
+        android:showAsAction="always"
+        android:title="@string/preferences_general_feature_datagrid" />
+    <item
+        android:id="@+id/search"
+        android:icon="@drawable/ic_tb_search"
+        android:showAsAction="always"
+        android:title="@string/main_toolbar_search" />
+    <item
+        android:id="@+id/resources"
+        android:icon="@drawable/ic_tb_folder"
+        android:showAsAction="always"
+        android:title="@string/main_toolbar_resources" />
+    <item
+        android:id="@+id/summary"
+        android:icon="@drawable/ic_tb_details"
+        android:showAsAction="always"
+        android:title="@string/preferences_appearance_toolbar_customize_summary" />
+    <item
+        android:id="@+id/lockData"
+        android:icon="@drawable/ic_tb_lock"
+        android:showAsAction="always"
+        android:title="" />
+    <item
+        android:id="@+id/action_act_collect_geonav_sw"
+        android:icon="@drawable/ic_explore_black_24dp"
+        android:showAsAction="always"
+        android:title="@string/menu_collect_start_geo_nav_title"/>
+    <item
+        android:id="@+id/action_act_collect_repeated_values_indicator"
+        android:icon="@drawable/numeric_1_box"
+        android:showAsAction="always"
+        android:title="@string/menu_collect_repeated_values_indicator"/>
+    <item
+        android:id="@+id/field_audio_mic"
+        android:icon="@drawable/ic_tb_field_mic_off"
+        android:showAsAction="always"
+        android:title="@string/menu_collect_start_field_audio" />
+</menu>
+

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.bytehamster.lib.preferencesearch.SearchPreference android:key="searchPreference" />
+
+    <EditTextPreference android:layout="@layout/view_preferences_horizontal_break" />
+
+    <Preference
+        android:icon="@drawable/ic_pref_profile_person"
+        android:key="pref_key_profile_settings"
+        android:title="@string/settings_profile"
+        app:fragment="com.fieldbook.tracker.preferences.ProfilePreferencesFragment" />
+
+    <Preference
+        android:icon="@drawable/ic_star_circle_outline"
+        android:key="pref_key_feature_settings"
+        android:title="@string/preferences_features_title"
+        app:fragment="com.fieldbook.tracker.preferences.FeaturesPreferencesFragment" />
+
+    <Preference
+        android:icon="@drawable/ic_pref_appearance"
+        android:key="pref_key_ui_settings"
+        android:title="@string/preferences_appearance_title"
+        app:fragment="com.fieldbook.tracker.preferences.AppearancePreferencesFragment" />
+
+    <Preference
+        android:icon="@drawable/ic_pref_navigation"
+        android:key="pref_key_ux_settings"
+        android:title="@string/preferences_behavior_title"
+        app:fragment="com.fieldbook.tracker.preferences.BehaviorPreferencesFragment" />
+
+    <Preference
+        android:icon="@drawable/ic_map_search"
+        android:key="pref_key_location_settings"
+        android:title="@string/preferences_location_title"
+        app:fragment="com.fieldbook.tracker.preferences.LocationPreferencesFragment" />
+
+    <Preference
+        android:icon="@drawable/ic_pref_sounds"
+        android:key="pref_key_sounds_settings"
+        android:title="@string/preferences_sounds"
+        app:fragment="com.fieldbook.tracker.preferences.SoundsPreferencesFragment" />
+
+    <Preference
+        android:icon="@drawable/ic_adv_brapi"
+        android:key="pref_key_brapi_settings"
+        android:title="@string/preferences_brapi"
+        app:fragment="com.fieldbook.tracker.preferences.BrapiPreferencesFragment" />
+
+    <Preference
+        android:icon="@drawable/ic_pref_system"
+        android:key="pref_key_system_settings"
+        android:title="@string/preferences_system_title"
+        app:fragment="com.fieldbook.tracker.preferences.SystemPreferencesFragment" />
+
+    <Preference
+        android:icon="@drawable/ic_database_cog"
+        android:key="pref_key_storage_settings"
+        android:title="@string/preferences_storage_title"
+        app:fragment="com.fieldbook.tracker.preferences.StoragePreferencesFragment" />
+
+    <Preference
+        android:icon="@drawable/ic_experimental"
+        android:key="pref_key_experimental_settings"
+        android:title="@string/preferences_experimental_title"
+        app:fragment="com.fieldbook.tracker.preferences.ExperimentalPreferencesFragment" />
+
+</androidx.preference.PreferenceScreen>

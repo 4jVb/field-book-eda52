@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        android:key="transfer_defaults"
+        android:title="@string/preferences_profile_person_title"
+        app:iconSpaceReserved="false">
+
+        <Preference
+            android:icon="@drawable/ic_pref_profile_person"
+            android:key="pref_profile_person"
+            android:title="@string/preferences_profile_set_person" />
+
+        <ListPreference
+            android:defaultValue="2"
+            android:entries="@array/preferences_profile_verification_interval_entries"
+            android:entryValues="@array/preferences_profile_verification_interval_values"
+            android:icon="@drawable/hours_24"
+            android:key="com.tracker.fieldbook.preference.profile_verification_interval"
+            android:summary="%s"
+            android:title="@string/preferences_profile_require_interval_title" />
+
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="settings_device"
+        android:title="@string/preferences_profile_device_title"
+        app:iconSpaceReserved="false">
+        <Preference
+            android:icon="@drawable/ic_device_pref"
+            android:key="pref_profile_device_name"
+            android:title="@string/preferences_profile_set_device_name" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

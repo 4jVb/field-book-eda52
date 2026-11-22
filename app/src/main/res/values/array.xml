@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="disable_entry_arrows">
+        <item>@string/preferences_behavior_disable_entry_arrow_neither</item>
+        <item>@string/preferences_behavior_disable_entry_arrow_left</item>
+        <item>@string/preferences_behavior_disable_entry_arrow_right</item>
+        <item>@string/preferences_behavior_disable_entry_arrow_both</item>
+    </string-array>
+
+    <string-array name="disable_entry_arrows_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="pref_toolbar_customize_title">
+        <item>@string/preferences_appearance_toolbar_customize_search</item>
+        <item>@string/preferences_appearance_toolbar_customize_resources</item>
+        <item>@string/preferences_appearance_toolbar_customize_summary</item>
+        <item>@string/preferences_appearance_toolbar_customize_lock</item>
+    </string-array>
+
+    <string-array name="pref_toolbar_customize_values">
+        <item>search</item>
+        <item>resources</item>
+        <item>summary</item>
+        <item>lockData</item>
+    </string-array>
+
+    <string-array name="pref_toolbar_customize_default">
+        <item>search</item>
+        <item>resources</item>
+        <item>summary</item>
+        <item>lockData</item>
+    </string-array>
+
+    <string-array name="pref_remap_volume_buttons">
+        <item>@string/preferences_behavior_volume_buttons_navigate_disabled</item>
+        <item>@string/preferences_behavior_volume_buttons_navigate_traits</item>
+        <item>@string/preferences_behavior_volume_buttons_navigate_entries</item>
+    </string-array>
+
+    <string-array name="pref_remap_volume_buttons_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string-array name="pref_return_character">
+        <item>@string/preferences_behavior_return_character_do_nothing</item>
+        <item>@string/preferences_behavior_return_character_next_plot</item>
+        <item>@string/preferences_behavior_return_character_next_trait</item>
+    </string-array>
+
+    <string-array name="pref_return_character_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string-array name="pref_import_source_entries">
+        <item>@string/import_source_ask</item>
+        <item>@string/import_source_local</item>
+        <item>@string/import_source_cloud</item>
+        <item>@string/import_source_brapi</item>
+    </string-array>
+
+    <string-array name="pref_import_source_values">
+        <item>ask</item>
+        <item>local</item>
+        <item>cloud</item>
+        <item>brapi</item>
+    </string-array>
+
+    <string-array name="pref_export_source_entries">
+        <item>@string/import_source_ask</item>
+        <item>@string/import_source_local</item>
+        <item>@string/import_source_brapi</item>
+    </string-array>
+
+    <string-array name="pref_export_source_values">
+        <item>ask</item>
+        <item>local</item>
+        <item>brapi</item>
+    </string-array>
+
+    <!-- Yes, they are entry entries -->
+    <string-array name="pref_behavior_skip_entries_entries">
+        <item>@string/preferences_behavior_skip_entries_disabled</item>
+        <item>@string/preferences_behavior_skip_entries_with_data</item>
+        <item>@string/preferences_behavior_skip_entries_across_all_traits</item>
+    </string-array>
+
+    <string-array name="pref_behavior_skip_entries_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string-array name="pref_general_skip_entries_entries">
+        <item>@string/preferences_general_skip_entries_disabled</item>
+        <item>@string/preferences_general_skip_entries_with_data</item>
+        <item>@string/preferences_general_skip_entries_across_all_traits</item>
+    </string-array>
+
+    <string-array name="pref_general_skip_entries_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string-array name="pref_brapi_version">
+        <item>@string/preferences_brapi_version_v1</item>
+        <item>@string/preferences_brapi_version_v2</item>
+    </string-array>
+
+    <string-array name="pref_brapi_oidc_flow">
+        <item>@string/preferences_brapi_oidc_flow_oauth_code</item>
+        <item>@string/preferences_brapi_oidc_flow_oauth_implicit</item>
+    </string-array>
+
+    <string-array name="pref_collect_customize_labelval">
+        <item>value</item>
+        <item>label</item>
+    </string-array>
+
+    <string-array name="pref_collect_labelval_customize_title">
+        <item>@string/preferences_appearance_collect_labelval_customize_value</item>
+        <item>@string/preferences_appearance_collect_labelval_customize_label</item>
+    </string-array>
+
+    <string-array name="pref_general_location_acquisition_level_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="pref_general_location_acquisition_level_entries">
+        <item>@string/location_level_off</item>
+        <item>@string/location_level_study</item>
+        <item>@string/location_level_observation_unit</item>
+        <item>@string/location_level_observation</item>
+    </string-array>
+
+    <string-array name="pref_coordinate_format_entries">
+        <item>@string/location_format_iso</item>
+        <item>@string/location_format_geojson</item>
+    </string-array>
+
+    <string-array name="pref_coordinate_format_values">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+
+    <string-array name="pref_geonav_logging_modes">
+        <item>@string/pref_geonav_log_off</item>
+        <item>@string/pref_geonav_log_limited</item>
+        <item>@string/pref_geonav_log_full</item>
+        <item>@string/pref_geonav_log_both</item>
+    </string-array>
+
+    <string-array name="pref_geonav_logging_mode_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="pref_general_move_to_unique_id_entries">
+        <item>@string/move_to_unique_id_disabled</item>
+        <item>@string/move_to_unique_id_text_or_scan</item>
+        <item>@string/move_to_unique_id_direct_camera_scan</item>
+    </string-array>
+
+    <string-array name="pref_general_move_to_unique_id_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+
+    <!-- degrees of precision to be used in spinner -->
+    <string-array name="dialog_geonav_collect_degrees_of_precision">
+        <item>Any</item>
+        <item>GPS</item>
+        <item>RTK</item>
+        <item>Float RTK</item>
+    </string-array>
+
+    <string-array name="pref_behavior_barcode_scanning_entries">
+        <item>@string/preferences_behavior_barcode_scanning_move_to_entry</item>
+        <item>@string/preferences_behavior_barcode_scanning_record_value</item>
+        <item>@string/preferences_behavior_barcode_scanning_enter_if_not_id</item>
+        <item>@string/preferences_behavior_barcode_scanning_ask</item>
+    </string-array>
+
+    <string-array name="pref_behavior_barcode_scanning_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+</resources>

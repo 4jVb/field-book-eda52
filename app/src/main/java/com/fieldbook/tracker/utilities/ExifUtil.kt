@@ -1,0 +1,190 @@
+package com.fieldbook.tracker.utilities
+
+import android.content.Context
+import android.net.Uri
+import android.os.Build
+import android.util.Log
+import androidx.annotation.RequiresApi
+import androidx.exifinterface.media.ExifInterface
+import com.fieldbook.tracker.database.models.ObservationUnitModel
+import com.fieldbook.tracker.database.models.ObservationVariableModel
+import com.fieldbook.tracker.database.models.StudyModel
+import com.fieldbook.tracker.traits.PhotoTraitLayout
+import com.google.common.reflect.TypeToken
+import com.google.gson.Gson
+import com.google.gson.JsonObject
+import java.io.File
+import java.io.FileOutputStream
+
+/**
+ * Utility class for handling ExifInterface on images.
+ */
+@RequiresApi(Build.VERSION_CODES.N)
+class ExifUtil {
+
+    companion object {
+
+        inline fun <reified T> saveJsonToExif(context: Context, model: T, uri: Uri) {
+
+            val gson = Gson().toJson(model, object : TypeToken<T>() {}.type)
+            saveStringToExif(context, gson.toString(), uri)
+        }
+
+        fun saveStringToExif(context: Context, data: String, uri: Uri) {
+
+            // ExifInterface needs a seekable file to rewrite in place, which a SAF document uri
+            // does not reliably give, so the image is edited through a temp file and copied back.
+            val tempFile = File(context.cacheDir, "exif_edit_${System.currentTimeMillis()}.jpg")
+
+            try {
+
+                context.contentResolver.openInputStream(uri)?.use { input ->
+                    FileOutputStream(tempFile).use { output -> input.copyTo(output) }
+                } ?: return
+
+                // Some cameras hand back an EXIF block that nearly fills the 65535 byte APP1
+                // budget, most of it a padded thumbnail. Clear that out before adding to it,
+                // otherwise the segment overflows and the image is left unreadable.
+                tempFile.writeBytes(JpegUtil.prepareForExifWrite(tempFile.readBytes()))
+
+                val exif = ExifInterface(tempFile.absolutePath)
+                exif.setAttribute(ExifInterface.TAG_USER_COMMENT, data)
+                exif.saveAttributes()
+
+                val written = tempFile.readBytes()
+
+                if (JpegUtil.isJpeg(written) && !JpegUtil.isStructurallyValid(written)) {
+                    Log.e(PhotoTraitLayout.TAG, "saveStringToExif: EXIF write produced an unreadable image, keeping the original")
+                    return
+                }
+
+                // Write the corrected file back, truncating any previous content
+                val out = context.contentResolver.openOutputStream(uri, "wt")
+                if (out != null) {
+                    out.use { output -> tempFile.inputStream().use { input -> input.copyTo(output) } }
+                } else {
+                    Log.e(PhotoTraitLayout.TAG, "saveStringToExif: openOutputStream returned null, EXIF not written back")
+                }
+
+            } catch (e: IllegalStateException) {
+
+                // androidx's ExifInterface refuses to write an APP1 segment larger than 65535
+                // bytes. The platform one truncated the length instead, which is what left
+                // photos unreadable on devices with a large camera EXIF block.
+                Log.e(PhotoTraitLayout.TAG, "EXIF data too large to write, keeping the original image.", e)
+
+            } catch (e: Exception) {
+
+                e.printStackTrace()
+
+                Log.d(PhotoTraitLayout.TAG, "EXIF data failed to write.")
+
+            } finally {
+
+                tempFile.delete()
+            }
+        }
+
+        /**
+         * Json example output saved in TAG_USER_COMMENT EXIF attribute
+         *
+         * {"study": {
+         *  "study_name":"field_sample",
+         *  "study_alias":"field_sample",
+         *  "study_unique_id_name":"plot_id",
+         *  "study_primary_id_name":"row",
+         *  "study_secondary_id_name":"plot",
+         *  "date_import":"2017-06-15 05:32:44-0700",
+         *  "count":200,"internal_id_study":1
+         *  },
+         *
+         * "observation_unit":
+         *  {"observation_unit_db_id":"13RPN00002",
+         *  "primary_id":"1",
+         *  "secondary_id":"2"
+         *  },
+         *
+         *  "observation_variable":{
+         *  "observation_variable_name":"Maize Height",
+         *  "observation_variable_field_book_format":"photo",
+         *  "default_value":"",
+         *  "external_db_id":"variable1",
+         *  "trait_data_source":"test-server.brapi.org",
+         *  "observation_variable_details":"Test"},
+         *  "collector": "FirstName LastName",
+         *  "timestamp": "yyyy-MM-dd-hh-mm-ss"
+         *  }
+         */
+        fun saveVariableUnitModelToExif(
+            context: Context,
+            collector: String,
+            timestamp: String,
+            study: StudyModel?,
+            unit: ObservationUnitModel?,
+            variable: ObservationVariableModel?,
+            uri: Uri,
+            rotationModel: SensorHelper.RotationModel?
+        ) {
+
+            val modelToSave = JsonObject()
+
+            if (study != null) {
+
+                val studyGson = Gson().toJsonTree(study, object : TypeToken<StudyModel>() {}.type)
+
+                val studyData = studyGson.asJsonObject.getAsJsonObject("map")
+
+                studyData.remove("internal_id_study")
+
+                modelToSave.add("study", studyData)
+            }
+
+            if (unit != null) {
+
+                val unitGson =
+                    Gson().toJsonTree(unit, object : TypeToken<ObservationUnitModel>() {}.type)
+
+                val unitData = unitGson.asJsonObject.getAsJsonObject("map")
+
+                unitData.remove("study_id")
+                unitData.remove("internal_id_observation_unit")
+
+                modelToSave.add("observation_unit", unitData)
+
+            }
+
+            if (variable != null) {
+
+                val variableGson = Gson().toJsonTree(
+                    variable,
+                    object : TypeToken<ObservationVariableModel>() {}.type
+                )
+
+                val variableData = variableGson.asJsonObject.getAsJsonObject("map")
+
+                variableData.remove("visible")
+                variableData.remove("position")
+                variableData.remove("internal_id_observation_variable")
+
+                modelToSave.add("observation_variable", variableData)
+            }
+
+            if (rotationModel != null) {
+
+                val rotationGson = Gson().toJsonTree(
+                    rotationModel,
+                    object : TypeToken<SensorHelper.RotationModel>() {}.type
+                )
+
+                val rotationData = rotationGson.asJsonObject
+
+                modelToSave.add("rotation", rotationData)
+            }
+
+            modelToSave.addProperty("collector", collector)
+            modelToSave.addProperty("timestamp", timestamp)
+
+            saveStringToExif(context, modelToSave.toString(), uri)
+        }
+    }
+}

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Enable BrAPI -->
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:icon="@drawable/ic_adv_brapi"
+        android:key="BRAPI_ENABLED"
+        android:summary="@string/preferences_brapi_enable_summary"
+        android:title="@string/preferences_brapi_enable_title" />
+
+    <!-- Add Account -->
+    <Preference
+        android:icon="@drawable/pheno_brapi_ic_key"
+        android:key="brapi_add_account"
+        android:title="@string/pheno_brapi_add_account" />
+
+    <Preference
+        android:icon="@drawable/pheno_brapi_ic_share"
+        android:key="brapi_shared_servers"
+        android:title="@string/pheno_brapi_shared_servers" />
+
+    <!-- Advanced Settings (navigates to sub-screen) -->
+    <Preference
+        android:fragment="com.fieldbook.tracker.preferences.BrapiAdvancedPreferencesFragment"
+        android:icon="@drawable/cogs"
+        android:key="brapi_advanced_settings"
+        android:title="@string/brapi_advanced_settings"
+        app:iconSpaceReserved="true" />
+
+    <!-- Active Server section — populated dynamically in BrapiPreferencesFragment -->
+    <PreferenceCategory
+        android:key="brapi_active_server_category"
+        app:allowDividerBelow="false"
+        android:title="@string/brapi_section_active_server"
+        app:iconSpaceReserved="false" />
+
+    <!-- Available Servers section — populated dynamically in BrapiPreferencesFragment -->
+    <PreferenceCategory
+        android:key="brapi_available_servers_category"
+        android:title="@string/brapi_section_available_servers"
+        app:iconSpaceReserved="false" />
+
+    <!-- Shared accounts from other PhenoApps — hidden when none are present -->
+    <PreferenceCategory
+        android:key="brapi_shared_accounts_category"
+        android:title="@string/pheno_brapi_section_shared_accounts"
+        app:iconSpaceReserved="false" />
+
+</PreferenceScreen>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/trait_line"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:focusable="false"
+    android:focusableInTouchMode="false"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:layout_margin="4dp"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp"
+    android:background="@drawable/cell">
+
+    <CheckBox
+        android:id="@+id/visible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center_vertical"
+        android:scaleX="1.1"
+        android:scaleY="1.1"
+        android:text="" />
+
+    <View
+        android:id="@+id/spacer2"
+        android:layout_width="5dp"
+        android:layout_height="1dp"
+        android:layout_toEndOf="@+id/visible" />
+
+    <ImageView
+        android:id="@+id/traitType"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/spacer2"
+        android:padding="3dp"
+        tools:src="@drawable/ic_trait_boolean"
+        tools:ignore="ContentDescription" />
+
+    <View
+        android:id="@+id/spacer3"
+        android:layout_width="15dp"
+        android:layout_height="1dp"
+        android:layout_toEndOf="@+id/traitType" />
+
+    <TextView
+        android:id="@+id/list_item_trait_trait_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/spacer3"
+        android:layout_toStartOf="@+id/dragSort"
+        android:ellipsize="end"
+        android:singleLine="true"
+        tools:text="insect damage"/>
+
+    <ImageView
+        android:id="@+id/dragSort"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:padding="3dp"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        android:src="@drawable/ic_reorder"
+        tools:ignore="ContentDescription" />
+
+</RelativeLayout>

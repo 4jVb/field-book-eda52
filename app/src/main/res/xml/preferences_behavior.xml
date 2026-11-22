@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        android:key="preferences_behavior_movement"
+        android:title="@string/preferences_behavior_movement_title"
+        app:iconSpaceReserved="false">
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_adv_cycle_traits_advances"
+            android:key="CycleTraits"
+            android:summary="@string/preferences_behavior_cycle_traits_description"
+            android:title="@string/preferences_behavior_cycle_traits" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_adv_return_first_trait"
+            android:key="ReturnFirst"
+            android:summary="@string/preferences_behavior_return_to_first_trait_description"
+            android:title="@string/preferences_behavior_return_to_first_trait" />
+
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/disable_entry_arrows"
+            android:entryValues="@array/disable_entry_arrows_values"
+            android:icon="@drawable/ic_pref_behavior_disable_arrows"
+            android:key="DISABLE_ENTRY_ARROW_NO_DATA"
+            android:summary="%s"
+            android:title="@string/preferences_behavior_disable_entry_arrow" />
+
+        <ListPreference
+            android:icon="@drawable/ic_adv_hide_entries"
+            android:key="com.fieldbook.tracker.HIDE_ENTRIES"
+            android:summary="%s"
+            android:title="@string/preferences_behavior_skip_entries_title"
+            android:entries="@array/pref_behavior_skip_entries_entries"
+            android:entryValues="@array/pref_behavior_skip_entries_values"
+            android:defaultValue="0"/>
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_swap_vertical"
+            android:key="FLIP_FLOP_ARROWS"
+            android:summary="@string/preferences_general_swap_navigation_description"
+            android:title="@string/preferences_general_swap_navigation" />
+
+        <ListPreference
+            android:icon="@drawable/star_four_points_circle_outline"
+            android:key="com.fieldbook.tracker.BARCODE_SCANNING_OPTIONS"
+            android:summary="%s"
+            android:title="@string/preferences_behavior_barcode_scanning_title"
+            android:entries="@array/pref_behavior_barcode_scanning_entries"
+            android:entryValues="@array/pref_behavior_barcode_scanning_values"
+            android:defaultValue="0"/>
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:icon="@drawable/ic_trait_barcode"
+            android:key="ATTACH_MEDIA_BARCODE_PRIORITIZE"
+            android:summary="@string/preferences_behavior_attach_media_barcode_prioritize_description"
+            android:title="@string/preferences_behavior_attach_media_barcode_prioritize" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="preferences_behavior_hardware"
+        android:title="@string/preferences_behavior_hardware_title"
+        app:iconSpaceReserved="false">
+
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/pref_remap_volume_buttons"
+            android:entryValues="@array/pref_remap_volume_buttons_values"
+            android:icon="@drawable/ic_remap_volume_buttons"
+            android:key="VOLUME_NAVIGATION"
+            android:summary="%s"
+            android:title="@string/preferences_behavior_volume_buttons_navigate" />
+
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/pref_return_character"
+            android:entryValues="@array/pref_return_character_values"
+            android:icon="@drawable/ic_return_character"
+            android:key="RETURN_CHARACTER"
+            android:summary="%s"
+            android:title="@string/preferences_behavior_return_character" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:icon="@drawable/gamepad"
+            android:key="com.tracker.fieldbook.preferences.keys.enable_media_keycode_events"
+            android:summary="@string/pref_alpha_media_keycode_events_summary"
+            android:title="@string/pref_alpha_media_keycode_events_title" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

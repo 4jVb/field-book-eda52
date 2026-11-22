@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/viewPageController"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <Button
+        android:elevation="100dp"
+        android:visibility="invisible"
+        android:id="@+id/repeated_values_view_left_btn"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:background="@drawable/ic_chevron_left"
+        android:contentDescription="@string/repeated_values_left_button_content_description"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.fieldbook.tracker.views.WrapContentViewPager
+        android:id="@+id/repeated_values_view_pager"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:clipToPadding="false"
+        android:gravity="center"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:textSize="@dimen/text_size_xlarge"
+        android:contentDescription="@string/repeated_values_pager_content_description"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/repeated_values_view_add_btn"
+        app:layout_constraintStart_toEndOf="@id/repeated_values_view_left_btn"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/repeated_values_view_vertical_gl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintGuide_percent="0.6"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:elevation="100dp"
+        android:id="@+id/repeated_values_view_add_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:src="@drawable/ic_plus"
+        android:contentDescription="@string/view_repeated_values_add_button_content_description"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:elevation="100dp"
+        android:id="@+id/repeated_values_view_right_btn"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:background="@drawable/ic_chevron_right"
+        android:visibility="invisible"
+        android:contentDescription="@string/repeated_values_right_button_content_description"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

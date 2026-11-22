@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.fieldbook.tracker.views.ActionImageView
+        android:id="@+id/traitLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/view_trait_box_left_content_description"
+        android:paddingStart="0dp"
+        android:paddingEnd="5dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:src="@drawable/trait_chevron_left"
+        app:layout_constraintBottom_toTopOf="@id/traitDetails"
+        app:layout_constraintTop_toTopOf="@+id/traitTypeTv"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <com.fieldbook.tracker.views.ActionImageView
+        android:id="@+id/traitRight"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/view_trait_box_right_content_description"
+        android:paddingStart="5dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:paddingEnd="0dp"
+        android:src="@drawable/trait_chevron_right"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/traitTypeTv"
+        app:layout_constraintBottom_toTopOf="@id/traitDetails" />
+
+    <TextView
+        android:id="@+id/traitTypeTv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:gravity="center"
+        android:text=""
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:singleLine="false"
+        android:textColor="#000000"
+        android:textSize="?attr/fb_title_text_size"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/traitDetails"
+        app:layout_constraintEnd_toStartOf="@id/traitRight"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/traitLeft" />
+
+    <com.fieldbook.tracker.views.ActionTextView
+        android:id="@+id/traitDetails"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="1"
+        android:text="@string/main_trait_details"
+        android:textColor="#000000"
+        android:textSize="@dimen/text_size_small"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/traitTypeTv"
+        app:layout_constraintBottom_toTopOf="@id/traitsStatusBarRv" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/traitsStatusBarRv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:foregroundGravity="center"
+        app:layout_constraintTop_toBottomOf="@id/traitDetails"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

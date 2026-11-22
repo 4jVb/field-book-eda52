@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- custom attributes for TItledEditText View -->
+    <declare-styleable name="TitledEditView">
+        <attr name="title" format="string"/>
+        <attr name="android:hint" format="string"/>
+        <attr name="android:inputType" format="integer"/>
+    </declare-styleable>
+
+    <!-- Give ourselves access to MarginLayout's styleables -->
+    <declare-styleable name="ViewGroup_MarginLayout">
+        <attr name="android:layout_margin" />
+        <attr name="android:layout_marginLeft" />
+        <attr name="android:layout_marginTop" />
+        <attr name="android:layout_marginRight" />
+        <attr name="android:layout_marginBottom" />
+    </declare-styleable>
+
+    <!-- Alignment constants. -->
+    <attr name="alignmentMode">
+        <!-- Align the bounds of the children.
+        See {@link android.widget.GridLayout#ALIGN_BOUNDS}. -->
+        <enum name="alignBounds" value="0" />
+        <!-- Align the margins of the children.
+        See {@link android.widget.GridLayout#ALIGN_MARGINS}. -->
+        <enum name="alignMargins" value="1" />
+    </attr>
+
+    <declare-styleable name="GridLayout">
+        <!-- The orientation property is not used during layout. It is only used to
+        allocate row and column parameters when they are not specified by its children's
+        layout paramters. GridLayout works like LinearLayout in this case;
+        putting all the components either in a single row or in a single column -
+        depending on the value of this flag. In the horizontal case, a columnCount
+        property may be additionally supplied to force new rows to be created when a
+        row is full. The rowCount attribute may be used similarly in the vertical case.
+        The default is horizontal. -->
+        <attr name="android:orientation" />
+        <!-- The maxmimum number of rows to create when automatically positioning children. -->
+        <attr name="rowCount" format="integer" />
+        <!-- The maxmimum number of columns to create when automatically positioning children. -->
+        <attr name="columnCount" format="integer" />
+        <!-- When set to true, tells GridLayout to use default margins when none are specified
+        in a view's layout parameters.
+        The default value is false.
+        See {@link android.widget.GridLayout#setUseDefaultMargins(boolean)}.-->
+        <attr name="useDefaultMargins" format="boolean" />
+        <!-- When set to alignMargins, causes alignment to take place between the outer
+        boundary of a view, as defined by its margins. When set to alignBounds,
+        causes alignment to take place between the edges of the view.
+        The default is alignMargins.
+        See {@link android.widget.GridLayout#setAlignmentMode(int)}.-->
+        <attr name="alignmentMode" />
+        <!-- When set to true, forces row boundaries to appear in the same order
+        as row indices.
+        The default is true.
+        See {@link android.widget.GridLayout#setRowOrderPreserved(boolean)}.-->
+        <attr name="rowOrderPreserved" format="boolean" />
+        <!-- When set to true, forces column boundaries to appear in the same order
+        as column indices.
+        The default is true.
+        See {@link android.widget.GridLayout#setColumnOrderPreserved(boolean)}.-->
+        <attr name="columnOrderPreserved" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="GridLayout_Layout">
+        <!-- The row boundary delimiting the top of the group of cells
+        occupied by this view. -->
+        <attr name="layout_row" format="integer" />
+        <!-- The row span: the difference between the bottom and top
+        boundaries delimiting the group of cells occupied by this view.
+        The default is one.
+        See {@link android.widget.GridLayout.Spec}. -->
+        <attr name="layout_rowSpan" format="integer" min="1" />
+        <!-- The column boundary delimiting the left of the group of cells
+        occupied by this view. -->
+        <attr name="android:layout_column" />
+        <!-- The column span: the difference between the right and left
+        boundaries delimiting the group of cells occupied by this view.
+        The default is one.
+        See {@link android.widget.GridLayout.Spec}. -->
+        <attr name="layout_columnSpan" format="integer" min="1" />
+        <!-- Gravity specifies how a component should be placed in its group of cells.
+        The default is LEFT | BASELINE.
+        See {@link android.widget.GridLayout.LayoutParams#setGravity(int)}. -->
+        <attr name="android:layout_gravity" />
+    </declare-styleable>
+
+    <!-- Specifies how to place the content of an object, both
+         on the x- and y-axis, within the object itself. -->
+    <attr name="gravity">
+        <!-- Push object to the top of its container, not changing its size. -->
+        <flag name="top" value="0x30" />
+        <!-- Push object to the bottom of its container, not changing its size. -->
+        <flag name="bottom" value="0x50" />
+        <!-- Push object to the left of its container, not changing its size. -->
+        <flag name="left" value="0x03" />
+        <!-- Push object to the right of its container, not changing its size. -->
+        <flag name="right" value="0x05" />
+        <!-- Place object in the vertical center of its container, not changing its size. -->
+        <flag name="center_vertical" value="0x10" />
+        <!-- Grow the vertical size of the object if needed so it completely fills its container. -->
+        <flag name="fill_vertical" value="0x70" />
+        <!-- Place object in the horizontal center of its container, not changing its size. -->
+        <flag name="center_horizontal" value="0x01" />
+        <!-- Grow the horizontal size of the object if needed so it completely fills its container. -->
+        <flag name="fill_horizontal" value="0x07" />
+        <!-- Place the object in the center of its container in both the vertical and horizontal axis, not changing its size. -->
+        <flag name="center" value="0x11" />
+        <!-- Grow the horizontal and vertical size of the object if needed so it completely fills its container. -->
+        <flag name="fill" value="0x77" />
+        <!-- Additional option that can be set to have the top and/or bottom edges of
+             the child clipped to its container's bounds.
+             The clip will be based on the vertical gravity: a top gravity will clip the bottom
+             edge, a bottom gravity will clip the top edge, and neither will clip both edges. -->
+        <flag name="clip_vertical" value="0x80" />
+        <!-- Additional option that can be set to have the left and/or right edges of
+             the child clipped to its container's bounds.
+             The clip will be based on the horizontal gravity: a left gravity will clip the right
+             edge, a right gravity will clip the left edge, and neither will clip both edges. -->
+        <flag name="clip_horizontal" value="0x08" />
+    </attr>
+    <!-- Default GridView style. -->
+    <attr name="gridViewStyle" format="reference" />
+    <declare-styleable name="TwoWayAbsListView">
+        <!-- Drawable used to indicate the currently selected item in the list. -->
+        <attr name="listSelector" format="color|reference" />
+        <!-- When set to true, the selector will be drawn over the selected item.
+             Otherwise the selector is drawn behind the selected item. The default
+             value is false. -->
+        <attr name="drawSelectorOnTop" format="boolean" />
+        <!-- Used by ListView and GridView to stack their content from the bottom. -->
+        <attr name="stackFromBottom" format="boolean" />
+        <!-- When set to true, the list uses a drawing cache during scrolling.
+             This makes the rendering faster but uses more memory. The default
+             value is true. -->
+        <attr name="scrollingCache" format="boolean" />
+        <!-- When set to true, the list will filter results as the user types. The
+             List's adapter must support the Filterable interface for this to work. -->
+        <!-- <attr name="textFilterEnabled" format="boolean" /> -->
+        <!-- Sets the transcript mode for the list. In transcript mode, the list
+             scrolls to the bottom to make new items visible when they are added. -->
+        <attr name="transcriptMode">
+            <!-- Disables transcript mode. This is the default value. -->
+            <enum name="disabled" value="0" />
+            <!-- The list will automatically scroll to the bottom when
+                 a data set change notification is received and only if the last item is
+                 already visible on screen. -->
+            <enum name="normal" value="1" />
+            <!-- The list will automatically scroll to the bottom, no matter what items
+                 are currently visible. -->
+            <enum name="alwaysScroll" value="2" />
+        </attr>
+        <!-- Indicates that this list will always be drawn on top of solid, single-color
+             opaque background. This allows the list to optimize drawing. -->
+        <attr name="cacheColorHint" format="color" />
+        <!-- Enables the fast scroll thumb that can be dragged to quickly scroll through
+             the list. -->
+        <!-- <attr name="fastScrollEnabled" format="boolean" /> -->
+        <!-- When set to true, the list will use a more refined calculation
+             method based on the pixels height of the items visible on screen. This
+             property is set to true by default but should be set to false if your adapter
+             will display items of varying heights. When this property is set to true and
+             your adapter displays items of varying heights, the scrollbar thumb will
+             change size as the user scrolls through the list. When set to fale, the list
+             will use only the number of items in the adapter and the number of items visible
+             on screen to determine the scrollbar's properties. -->
+        <attr name="smoothScrollbar" format="boolean" />
+
+        <!-- Use this attribute to control which direction the GridView scrolls when in
+             portrait orientation -->
+        <attr name="scrollDirectionPortrait">
+            <!-- Scroll up vertically. This is the default value. -->
+            <enum name="vertical" value="0" />
+            <!-- Scroll horizontally. -->
+            <enum name="horizontal" value="1" />
+        </attr>
+        <attr name="scrollDirectionLandscape">
+            <!-- Scroll up vertically. This is the default value. -->
+            <enum name="vertical" value="0" />
+            <!-- Scroll horizontally. -->
+            <enum name="horizontal" value="1" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="TwoWayGridView">
+        <attr name="horizontalSpacing" format="dimension" />
+        <attr name="verticalSpacing" format="dimension" />
+        <attr name="stretchMode">
+            <enum name="none" value="0" />
+            <enum name="spacingWidth" value="1" />
+            <enum name="columnWidth" value="2" />
+            <enum name="spacingWidthUniform" value="3" />
+        </attr>
+        <attr name="columnWidth" format="dimension" />
+        <attr name="rowHeight" format="dimension" />
+        <attr name="numColumns" format="integer" min="0">
+            <enum name="auto_fit" value="-1" />
+        </attr>
+        <attr name="numRows" format="integer" min="0">
+            <enum name="auto_fit" value="-1" />
+        </attr>
+        <attr name="gravity" />
+    </declare-styleable>
+
+    <!-- theme definitions -->
+    <!-- these attributes are changed for each theme within the styles file -->
+    <attr format="color" name="fb_color_primary"/>
+    <attr format="color" name="fb_color_primary_dark"/>
+    <attr format="color" name="fb_color_accent"/>
+    <attr format="color" name="fb_color_background"/>
+
+    <attr format="dimension" name="fb_title_text_size"/>
+    <attr format="dimension" name="fb_body_text_size" />
+    <attr format="dimension" name="fb_subheading_text_size"/>
+
+    <!-- tutorial lib -->
+    <attr format="color" name="fb_tap_target_color"/>
+
+    <!-- at times for each theme its helpful to have a dark/light text color -->
+    <attr format="color" name="fb_color_text_light"/>
+    <attr format="color" name="fb_color_text_dark"/>
+    <attr format="color" name="fb_color_text_secondary"/>
+    <attr format="color" name="fb_color_text_high_contrast_inverted"/>
+
+    <!-- color of edit text hint -->
+    <attr format="color" name="fb_color_hint_text"/>
+
+    <!-- color of buttons with text -->
+    <attr format="color" name="fb_color_text_button_background"/>
+
+    <!-- text color of all buttons -->
+    <attr format="color" name="fb_button_text_color"/>
+
+    <!-- color of the highlight applied to the list item that is currently selected -->
+    <attr format="color" name="fb_spinner_selected"/>
+
+    <!-- color of the box surrounding a spinner list item when it is clicked -->
+    <attr format="color" name="fb_spinner_focused"/>
+
+    <!-- these will change colors of all icons -->
+    <attr format="color" name="fb_icon_tint"/>
+    <attr format="color" name="fb_icon_fill_tint"/>
+
+    <!-- color of toolbar titles -->
+    <attr format="color" name="fb_title_text_color"/>
+    <attr format="color" name="fb_subheading_color"/>
+
+    <!-- circular progress bar color (brapi auth) -->
+    <attr format="color" name="fb_color_indeterminate_progress_bar"/>
+
+    <!-- specific to certain features/traits -->
+    <!-- round button normal/pressed colors (counter, gps, ...)-->
+    <attr name="fb_button_color_normal" format="color" />
+    <attr name="fb_button_color_pressed" format="color" />
+
+    <!-- default red/blue when a value is saved or a saved value is changed -->
+    <attr name="fb_value_saved_color" format="color" />
+    <attr name="fb_value_altered_color" format="color" />
+
+    <!-- button press color (for categorical traits) -->
+    <attr name="fb_trait_categorical_button_press_color" format="color" />
+
+    <attr name="fb_bluetooth_connected_color" format="color" />
+    <attr name="fb_trait_boolean_true_color" format="color" />
+    <attr name="fb_trait_boolean_false_color" format="color" />
+
+    <!-- percent trait colors -->
+    <attr name="fb_seek_bar" format="reference" />
+    <attr name="fb_trait_percent_background_center_color" format="color" />
+    <attr name="fb_trait_percent_background_start_end_color" format="color" />
+    <attr name="fb_trait_percent_stroke_color" format="color" />
+    <attr name="fb_trait_percent_start_color" format="color" />
+
+    <!-- counter trait plus/minus buttons -->
+    <attr name="fb_round_button_background" format="reference" />
+    <attr name="fb_round_button_background_with_indicator" format="reference" />
+
+    <attr name="fb_seek_bar_color" format="color" />
+    <attr name="fb_seek_bar_thumb_color" format="color" />
+
+    <attr name="fb_border_color" format="color" />
+
+    <attr name="fb_trait_button_background_tint" format="color" />
+
+    <attr name="fb_categorical_button_selected_color" format="color" />
+
+    <attr name="fb_preferences_horizontal_break_color" format="color" />
+
+    <!-- geonav snackbar view reference -->
+    <attr name="fb_geonav_snackbar_view" format="reference" />
+
+    <!-- within-dialog error message color -->
+    <attr name="fb_error_message_color" format="color" />
+
+    <!-- statistics activity heatmap colors -->
+    <attr name="fb_heatmap_color_low" format="color"/>
+    <attr name="fb_heatmap_color_medium" format="color"/>
+    <attr name="fb_heatmap_color_high" format="color"/>
+    <attr name="fb_heatmap_color_max" format="color"/>
+
+    <!-- action mode selected item color -->
+    <attr name="selectedItemBackground" format="color"/>
+
+    <!-- chip colors -->
+    <attr name="defaultChipBackground" format="color"/>
+    <attr name="selectableChipBackground" format="color"/>
+    <attr name="selectableChipStroke" format="color"/>
+
+    <!-- generic chip colors for the different filtering layers / themes -->
+    <attr name="fb_first_chip_color" format="color" />
+    <attr name="fb_second_chip_color" format="color" />
+    <attr name="fb_third_chip_color" format="color" />
+    <attr name="fb_fourth_chip_color" format="color" />
+
+    <attr name="fb_inverse_crop_region_color" format="color"/>
+
+    <attr name="fb_graph_item_selected_color" format="color"/>
+    <attr name="fb_graph_item_unselected_color" format="color"/>
+    <attr name="fb_graph_item_text_color" format="color"/>
+
+    <!-- data grid colors -->
+    <attr name="dataFilledColor" format="color"/>
+    <attr name="emptyCellColor" format="color"/>
+    <attr name="activeCellColor" format="color"/>
+    <attr name="activeCellTextColor" format="color"/>
+    <attr name="cellTextColor" format="color"/>
+    <attr name="tableBorderColor" format="color"/>
+
+    <!-- stepper ui colors -->
+    <attr name="stepper_icon_color" format="color"/>
+    <attr name="stepper_icon_bg_color" format="color"/>
+    <attr name="stepper_icon_on_done_color" format="color"/>
+    <attr name="stepper_icon_on_done_bg_color" format="color"/>
+    <attr name="stepper_line_color" format="color"/>
+    <attr name="stepper_line_on_done_color" format="color"/>
+
+</resources>
