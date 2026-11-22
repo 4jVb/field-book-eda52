@@ -25,6 +25,12 @@ object CompoundTraitIndexer {
 
     private const val TAG = "CompoundTraitIndexer"
 
+    /** Replaces the whole index with the compound variables found in [variables]. */
+    fun reindex(variables: List<BrAPIObservationVariable>) {
+        CompoundTraitDao.deleteAll()
+        indexVariables(variables)
+    }
+
     /**
      * Parses and indexes a list of BrAPIObservationVariable objects.
      * Only variables whose name contains "|" are processed as compound traits.
@@ -74,6 +80,9 @@ object CompoundTraitIndexer {
                 }
             }
         }
+
+        // base traits ("base|CO:0001") have neither time of year nor event: not compounds
+        if (toyType == null && eventType == null) return
 
         val model = CompoundTraitModel(
             baseTraitName = baseName,

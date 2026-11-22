@@ -62,6 +62,11 @@ class SystemPreferencesFragment : PreferenceFragmentCompat(),
             true
         }
 
+        findPreference<Preference>("pref_share_error_log")?.setOnPreferenceClickListener {
+            activity?.let { com.fieldbook.tracker.utilities.ErrorLog.shareLog(it) }
+            true
+        }
+
         val debugApplicationPref = findPreference<Preference>("pref_debug_application")
         debugApplicationPref?.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             if (checkDirectory()) {

@@ -28,6 +28,12 @@
             app:title="@string/preferences_source_default_export"
             app:useSimpleSummaryProvider="true" />
 
+        <Preference
+            android:icon="@drawable/ic_share"
+            android:key="pref_share_error_log"
+            android:summary="@string/error_log_pref_summary"
+            android:title="@string/error_log_pref_title" />
+
         <CheckBoxPreference
             android:defaultValue="true"
             android:icon="@drawable/ic_share"

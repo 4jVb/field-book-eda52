@@ -1820,7 +1820,7 @@
     <string name="act_brapi_list_import_no_items">La lista seleccionada no tiene items</string>
     <string name="act_brapi_list_import_no_variables">No se encontraron variables de observación para los items de la lista</string>
     <string name="act_brapi_list_import_error">Error al importar la lista: %1$s</string>
-    <string name="brapi_filter_type_list">Listas (importar por lista)</string>
+    <string name="brapi_filter_type_list">Listas</string>
 
     <!-- EDA52 / Breedbase build: Time of Year / Event dialog -->
     <string name="toy_dialog_title">Configurar Tiempo del año / Evento</string>
@@ -1847,7 +1847,14 @@
     <string name="toy_sync_no_compounds">No se encontraron traits compuestos en el índice. Por favor importe una lista de traits compuestos desde Breedbase primero.</string>
     <string name="act_brapi_list_picker_empty">El servidor no devolvió listas. Si la lista es privada, compártela (pública) en Breedbase.</string>
     <string name="act_brapi_list_picker_error">No se pudieron cargar las listas: %1$s</string>
-    <string name="brapi_compound_index_empty">No se encontraron traits compuestos en el índice, por favor importe la lista de compuestos primero.</string>
+    <string name="brapi_compound_index_empty">No se encontraron traits compuestos en Breedbase. Cree los traits compuestos en Breedbase e inténtelo de nuevo.</string>
     <string name="brapi_compound_missing">Los siguientes traits base no tienen trait compuesto correspondiente en Breedbase:\n%1$s\n\nCree los traits compuestos faltantes en Breedbase e impórtelos vía Lista, o desmárquelos en el diálogo de Tiempo del año/Evento. No se subió nada.</string>
     <string name="brapi_compound_ambiguous">Hay más de un trait compuesto que coincide:\n%1$s\n\nNo se subió nada.</string>
+    <string name="brapi_compound_check_failed">No se pudieron verificar los traits compuestos: %1$s. No se subió nada.</string>
+    <string name="error_log_pref_title">Compartir registro de errores</string>
+    <string name="error_log_pref_summary">Comparte el registro reciente de la app para diagnosticar errores</string>
+    <string name="error_log_crash_title">La app se cerró inesperadamente</string>
+    <string name="error_log_crash_message">Se guardó un reporte del error. ¿Quieres compartirlo?</string>
+    <string name="error_log_share">Compartir</string>
+    <string name="error_log_discard">Descartar</string>
 </resources>

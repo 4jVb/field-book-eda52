@@ -21,6 +21,7 @@ import com.fieldbook.tracker.traits.CategoricalTraitLayout
 import com.fieldbook.tracker.traits.formats.Formats
 import com.fieldbook.tracker.traits.formats.coders.DateJsonCoder
 import com.fieldbook.tracker.utilities.CategoryJsonUtil
+import com.fieldbook.tracker.utilities.CompoundTraitIndexer
 import com.fieldbook.tracker.utilities.CompoundUploadPlanner
 import com.fieldbook.tracker.utilities.TimeOfYearEventHelper
 import com.fieldbook.tracker.brapi.service.BrAPIServiceV2
@@ -274,35 +275,14 @@ class BrapiSyncViewModel @Inject constructor(
             return
         }
 
-        // EDA52 / Breedbase build: when a Time of Year / Event config is active, observations of
-        // the selected base traits are uploaded as their compound variable. Strict rule: if any
-        // selected trait has no (or more than one) compound variable, abort before sending anything.
-        val v2Service = brAPIService as? BrAPIServiceV2
-        try {
-            val localStudyId = study.studyId
-            val allTraits = dataHelper.getAllTraitObjects()
-            val toyConfig = TimeOfYearEventHelper.getActiveConfig(context, localStudyId, allTraits)
-            if (CompoundUploadPlanner.isActive(toyConfig)) {
-                val plan = CompoundUploadPlanner.build(allTraits, toyConfig!!)
-                if (!plan.ok) {
-                    v2Service?.setVariableOverrides(emptyMap())
-                    _uiState.update {
-                        it.copy(isUploadFinished = false, uploadError = plan.errorMessage(context))
-                    }
-                    return
-                }
-                v2Service?.setVariableOverrides(
-                    plan.overrides.mapValues { arrayOf(it.value.dbId, it.value.name) }
-                )
-            } else {
-                v2Service?.setVariableOverrides(emptyMap())
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "Could not evaluate the compound trait configuration", e)
-            v2Service?.setVariableOverrides(emptyMap())
-        }
-
         activeJob = viewModelScope.launch(Dispatchers.IO) {
+
+            // EDA52 / Breedbase build: resolve compound variables (needs the network)
+            val compoundError = prepareCompoundUpload(study.studyId)
+            if (compoundError != null) {
+                _uiState.update { it.copy(isUploadFinished = false, uploadError = compoundError) }
+                return@launch
+            }
 
             try {
 
@@ -407,6 +387,54 @@ class BrapiSyncViewModel @Inject constructor(
 
                 refreshLocalStatus()
             }
+        }
+    }
+
+    /**
+     * EDA52 / Breedbase build: when a Time of Year / Event config is active, observations of the
+     * selected base traits are uploaded as their compound variable. If the local index does not
+     * have them, the compound variables are downloaded from Breedbase first. Strict rule: if any
+     * selected trait still has no (or more than one) compound variable, nothing is uploaded.
+     *
+     * @return an error message to show, or null when the upload can go ahead.
+     */
+    private fun prepareCompoundUpload(localStudyId: Int): String? {
+        val v2Service = brAPIService as? BrAPIServiceV2
+        try {
+            val allTraits = dataHelper.getAllTraitObjects()
+            val toyConfig = TimeOfYearEventHelper.getActiveConfig(context, localStudyId, allTraits)
+            if (!CompoundUploadPlanner.isActive(toyConfig)) {
+                v2Service?.setVariableOverrides(emptyMap())
+                return null
+            }
+
+            var plan = CompoundUploadPlanner.build(allTraits, toyConfig!!)
+            if (!plan.ok && v2Service != null) {
+                try {
+                    v2Service.authorizeClient()
+                    val variables = v2Service.listService.fetchAllVariables()
+                    if (variables.isNotEmpty()) {
+                        CompoundTraitIndexer.reindex(variables)
+                        plan = CompoundUploadPlanner.build(allTraits, toyConfig)
+                    }
+                } catch (e: Exception) {
+                    Log.w(TAG, "Could not refresh compound variables from the server", e)
+                }
+            }
+
+            if (!plan.ok) {
+                v2Service?.setVariableOverrides(emptyMap())
+                return plan.errorMessage(context)
+            }
+
+            v2Service?.setVariableOverrides(
+                plan.overrides.mapValues { arrayOf(it.value.dbId, it.value.name) }
+            )
+            return null
+        } catch (e: Exception) {
+            Log.e(TAG, "Could not evaluate the compound trait configuration", e)
+            v2Service?.setVariableOverrides(emptyMap())
+            return context.getString(R.string.brapi_compound_check_failed, e.message ?: e.javaClass.simpleName)
         }
     }
 

@@ -2108,7 +2108,7 @@
     <string name="act_brapi_list_import_no_items">The selected list has no items</string>
     <string name="act_brapi_list_import_no_variables">No observation variables were found for the list items</string>
     <string name="act_brapi_list_import_error">Error importing list: %1$s</string>
-    <string name="brapi_filter_type_list">Lists (import by list)</string>
+    <string name="brapi_filter_type_list">Lists</string>
 
 
     <!-- EDA52 / Breedbase build: Time of Year / Event dialog -->
@@ -2137,7 +2137,14 @@
 
     <string name="act_brapi_list_picker_empty">No lists were returned. Private lists need to be shared (public) in Breedbase.</string>
     <string name="act_brapi_list_picker_error">Could not load lists: %1$s</string>
-    <string name="brapi_compound_index_empty">No compound traits were found in the index. Please import the list of compound traits first.</string>
+    <string name="brapi_compound_index_empty">No compound traits were found in Breedbase. Create the compound traits in Breedbase and try again.</string>
     <string name="brapi_compound_missing">These base traits have no matching compound trait in Breedbase:\n%1$s\n\nCreate the missing compound traits in Breedbase and import them through a list, or uncheck them in the Time of Year / Event dialog. Nothing was uploaded.</string>
     <string name="brapi_compound_ambiguous">More than one compound trait matches:\n%1$s\n\nNothing was uploaded.</string>
+    <string name="brapi_compound_check_failed">Could not check the compound traits: %1$s. Nothing was uploaded.</string>
+    <string name="error_log_pref_title">Share error log</string>
+    <string name="error_log_pref_summary">Shares the app\'s recent log so errors can be diagnosed</string>
+    <string name="error_log_crash_title">The app closed unexpectedly</string>
+    <string name="error_log_crash_message">An error report was saved. Do you want to share it?</string>
+    <string name="error_log_share">Share</string>
+    <string name="error_log_discard">Discard</string>
 </resources>

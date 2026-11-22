@@ -52,6 +52,28 @@ class ListService(
     private fun normalize(value: String?): String =
         value.orEmpty().trim().lowercase(java.util.Locale.ROOT).replace(Regex("\\s+"), " ")
 
+    /** Downloads every variable of the server (paged). Used to find compound variables at sync time. */
+    fun fetchAllVariables(onProgress: ((Int, Int) -> Unit)? = null): List<BrAPIObservationVariable> {
+        val all = ArrayList<BrAPIObservationVariable>()
+        var page = 0
+        var totalPages = 1
+        while (page < totalPages && page < 100) {
+            val params = VariableQueryParams().apply {
+                this.page(page)
+                this.pageSize(200)
+            }
+            val response: ApiResponse<BrAPIObservationVariableListResponse> =
+                traitsApi.variablesGet(params)
+            val body = response.body ?: break
+            val data = body.result?.data ?: break
+            all.addAll(data)
+            totalPages = body.metadata?.pagination?.totalPages ?: 1
+            page++
+            onProgress?.invoke(page, totalPages)
+        }
+        return all
+    }
+
     /**
      * Downloads the variables of the server once (paged) and keeps the ones whose DbId OR name
      * matches an entry of the list. Returns the matched variables and the entries not found.
