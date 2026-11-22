@@ -15,10 +15,7 @@ out/
 
 # Gradle files
 .gradle/
-gradle/
 build/
-gradlew
-gradlew.bat
 *.hprof
 
 # Local configuration file (sdk path, etc)
