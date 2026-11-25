@@ -51,24 +51,18 @@ fun BrAPIObservationVariable.toTraitObject(context: Context) = TraitObject().als
         it.allowMulticat = true
     }
 
-    scale?.validValues?.categories?.let { categories ->
-        if (categories.isNotEmpty()) {
-            it.categories = CategoryJsonUtil.buildCategoryList(categories)
-            it.details += "\nCategories: ${CategoryJsonUtil.buildCategoryDescriptionString(categories)}"
+    // EDA52 / Breedbase build: label = trait_details (readable), value = trait_categories (uploaded)
+    val builtCategories = BrapiTraitCategoriesParser.fromVariable(this)
+    if (!builtCategories.isNullOrEmpty()) {
+        it.categories = CategoryJsonUtil.buildCategoryList(builtCategories)
+        it.details += "\nCategories: ${CategoryJsonUtil.buildCategoryDescriptionString(builtCategories)}"
+        if (it.format == "text" || it.format.isBlank()) {
+            it.format = "categorical"
         }
+        Log.i("PhenotypingMapper", "Categories for $observationVariableName: ${it.categories} | ${BrapiTraitCategoriesParser.debugInfo(this).take(400)}")
+    } else if (it.format == "categorical") {
+        Log.w("PhenotypingMapper", "No categories found for $observationVariableName: ${BrapiTraitCategoriesParser.debugInfo(this)}")
     }
-    // === EDA52 / Breedbase build: category fallback ===
-    if (it.categories.isNullOrEmpty()) {
-        val fallbackCategories = BrapiTraitCategoriesParser.parseFromAdditionalInfo(additionalInfo)
-        if (fallbackCategories != null) {
-            it.categories = fallbackCategories
-            if (it.format == "text" || it.format.isBlank()) {
-                it.format = "categorical"
-            }
-            it.details += "\nCategories: $fallbackCategories"
-        }
-    }
-
 
     it.observationLevelNames = getObservationLevelNames()
 

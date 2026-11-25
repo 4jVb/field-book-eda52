@@ -82,8 +82,8 @@ object CompoundUploadPlanner {
             val key = baseKey(trait.name)
             val matches = index.filter {
                 baseKey(it.baseTraitName) == key &&
-                    it.toyType?.lowercase() == wantToy && it.toyValue == wantToyValue &&
-                    it.eventType?.lowercase() == wantEvent && it.eventValue == wantEventValue
+                    it.toyType?.lowercase()?.ifBlank { null } == wantToy && it.toyValue == wantToyValue &&
+                    it.eventType?.lowercase()?.ifBlank { null } == wantEvent && it.eventValue == wantEventValue
             }.distinctBy { it.observationVariableDbId }
 
             val expected = CompoundTraitNameBuilder.build(

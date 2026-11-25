@@ -409,6 +409,7 @@ class BrapiSyncViewModel @Inject constructor(
             }
 
             var plan = CompoundUploadPlanner.build(allTraits, toyConfig!!)
+            var diagnostic = ""
             if (!plan.ok && v2Service != null) {
                 try {
                     v2Service.authorizeClient()
@@ -417,14 +418,17 @@ class BrapiSyncViewModel @Inject constructor(
                         CompoundTraitIndexer.reindex(variables)
                         plan = CompoundUploadPlanner.build(allTraits, toyConfig)
                     }
+                    diagnostic = "\n\n[Diagnóstico] variables descargadas: ${variables.size}; " +
+                        "compuestos reconocidos: ${com.fieldbook.tracker.database.dao.CompoundTraitDao.count()}"
                 } catch (e: Exception) {
                     Log.w(TAG, "Could not refresh compound variables from the server", e)
+                    diagnostic = "\n\n[Diagnóstico] no se pudo consultar Breedbase: ${e.message ?: e.javaClass.simpleName}"
                 }
             }
 
             if (!plan.ok) {
                 v2Service?.setVariableOverrides(emptyMap())
-                return plan.errorMessage(context)
+                return plan.errorMessage(context) + diagnostic
             }
 
             v2Service?.setVariableOverrides(

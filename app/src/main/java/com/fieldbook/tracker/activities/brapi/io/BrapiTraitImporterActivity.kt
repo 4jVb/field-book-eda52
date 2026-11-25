@@ -5,6 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import android.widget.ProgressBar
 import androidx.appcompat.widget.Toolbar
 import com.fieldbook.tracker.R
@@ -122,6 +124,13 @@ class BrapiTraitImporterActivity : BrapiTraitImportAdapter.TraitLoader, ThemedAc
                         varUpdates[trait.observationVariableDbId] =
                             trait.toTraitObject(this@BrapiTraitImporterActivity)
                     }
+                }
+
+                // EDA52: complete categorical labels (trait_details) from Breedbase
+                withContext(Dispatchers.IO) {
+                    com.fieldbook.tracker.utilities.BreedbaseCategoryEnricher.enrich(
+                        this@BrapiTraitImporterActivity, varUpdates.values
+                    )
                 }
 
                 traitRepo.saveTraitsFromHashmap(varUpdates, dbIds)

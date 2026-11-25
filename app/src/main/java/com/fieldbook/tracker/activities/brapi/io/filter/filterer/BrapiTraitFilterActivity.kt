@@ -399,6 +399,10 @@ class BrapiTraitFilterActivity(
                     val trait = variable.toTraitObject(this@BrapiTraitFilterActivity)
                     variable.observationVariableDbId?.let { id -> traitObjects[id] = trait }
                 }
+                // EDA52: complete categorical labels (trait_details) from Breedbase
+                com.fieldbook.tracker.utilities.BreedbaseCategoryEnricher.enrich(
+                    this@BrapiTraitFilterActivity, traitObjects.values
+                )
                 // saveTraitsFromHashmap only inserts traits whose DbId is in the second argument
                 traitRepo.saveTraitsFromHashmap(traitObjects, ArrayList(traitObjects.keys))
                 prefs.edit { remove(FILTER_NAME) }

@@ -670,6 +670,11 @@ class BrapiStudyImportActivity : ThemedActivity(), CoroutineScope by MainScope()
                             it.realPosition = maxVariableIndex++
                         } } ?: listOf()
 
+                    // EDA52: complete categorical labels (trait_details) from Breedbase
+                    com.fieldbook.tracker.utilities.BreedbaseCategoryEnricher.enrich(
+                        this@BrapiStudyImportActivity, details.traits
+                    )
+
                     val geoCoordinateColumnName = "geo_coordinates"
 
                     val attributes = (studyAttributes.values.flatMap { it.keys } + geoCoordinateColumnName).distinct()
